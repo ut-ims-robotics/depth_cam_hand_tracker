@@ -13,8 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   leap_motion_controller
-
-  #moveit_ros_planning_interface
   roslib
 )
 
