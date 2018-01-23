@@ -12,16 +12,17 @@
 //  to trust the cnn output. 
 //
 
-#include <cctype>                        // std::tolower
+#include <cctype>                     // std::tolower
 
 #include "third_party/geometric.h"    // also includes linalg.h and uses hlsl aliases
 #include "third_party/mesh.h"         // a simple mesh class with vertex format structure (not tied to dx or opengl)
 #include "third_party/glwin.h"        // does the win32 and opengl setup,  similar to glut or glfw,  header file only implementation
 #include "third_party/misc_gl.h"      // simple mesh drawing, and to draw a scene (camera pose and array of meshes)
 #include "third_party/json.h"    
-#include "include/handtrack.h"    // HandTracker - the system for tracking the hand including eval of cnn in separate thread, physics update, model loading
+#include "include/handtrack.h"        // HandTracker - the system for tracking the hand including eval of cnn in separate thread, physics update, model loading
 
 #include "ros/ros.h"
+#include "ros/package.h"
 #include "leap_motion_controller/Set.h"
 #include "sensor_msgs/Image.h"
 #include "sensor_msgs/CameraInfo.h"
@@ -248,7 +249,7 @@ int main(int argc, char **argv)
 
   // Allocate the glwindow and the handtracker
   glwin = new GLWin("htk - testing hand tracking system  using realsense depth camera input",1280,720);
-  htk = new HandTracker;
+  htk = new HandTracker(ros::package::getPath(ROS_PACKAGE_NAME) + "/hand_tracking_samples");
 
   // Initialize the glwindow and the handtracker
   htk->always_take_cnn = false;  // when false the system will just use frame-to-frame when cnn result is not more accurate
@@ -283,9 +284,6 @@ int main(int argc, char **argv)
       default: std::cerr << "unused key " << (char)key << std::endl; break;
     }
   };
-
-  // No ide what this does, this json file does not exist. Prolly can be erased
-  htk->load_config( "../config.json");
 
   // Spin
   ros::spin();
