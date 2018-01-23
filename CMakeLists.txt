@@ -12,11 +12,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   sensor_msgs
-  leap_motion_controller
+  human_msgs
   roslib
 )
-
-message(STATUS ${catkin_LIBRARIES})
 
 catkin_package(
   CATKIN_DEPENDS roscpp

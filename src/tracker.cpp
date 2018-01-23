@@ -23,7 +23,7 @@
 
 #include "ros/ros.h"
 #include "ros/package.h"
-#include "leap_motion_controller/Set.h"
+#include "human_msgs/Hands.h"
 #include "sensor_msgs/Image.h"
 #include "sensor_msgs/CameraInfo.h"
 
@@ -31,7 +31,7 @@
  * Some global variables. Probably should create a class
  */
 ros::Publisher palm_pose_publisher;      // Publisher for the hand tracker messages
-leap_motion_controller::Set set_msg;
+human_msgs::Hands hands_msg;
 
 GLWin* glwin;
 HandTracker* htk;
@@ -179,15 +179,15 @@ void depthImageCallback(const sensor_msgs::Image& msg)
       palm_pose.header.frame_id = "camera_depth_optical_frame";
       palm_pose.header.stamp = ros::Time::now();
 
-      leap_motion_controller::Hand hand_msg;
+      human_msgs::Hand hand_msg;
       hand_msg.palm_pose = palm_pose;
 
       // Fill the set message. For no good reason, both hands will receive the same message
-      set_msg.right_hand = hand_msg;
-      set_msg.left_hand = hand_msg;
+      hands_msg.right_hand = hand_msg;
+      hands_msg.left_hand = hand_msg;
 
       // Publish the message
-      palm_pose_publisher.publish(set_msg);
+      palm_pose_publisher.publish(hands_msg);
 
 
       allmeshes.push_back(&dxmesh);
@@ -242,7 +242,7 @@ int main(int argc, char **argv)
   }
 
   // Advertise the palm pose publisher
-  palm_pose_publisher = nh.advertise<leap_motion_controller::Set>("leap_motion_output", 10);
+  palm_pose_publisher = nh.advertise<human_msgs::Hands>("hand_tracker_output", 10);
 
   // Subscriber for the depth data
   ros::Subscriber depth_image_subscriber = nh.subscribe("camera/depth/image", 10, depthImageCallback);
