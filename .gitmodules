@@ -1,0 +1,3 @@
+[submodule "hand_tracking_samples"]
+	path = hand_tracking_samples
+	url = https://github.com/ut-ims-robotics/hand_tracking_samples.git
