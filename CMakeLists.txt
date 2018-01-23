@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 2.8.3)
 project(depth_cam_hand_tracker)
 
 # The hand_tracking_samples requires a clang compiler
-set(CMAKE_CXX_COMPILER "clang++")
+find_program(CLANGPP clang++ HINTS /usr/local/bin /usr/bin /opt/local/bin)
+if(${CLANGPP} MATCHES "clang")
+set(CMAKE_CXX_COMPILER ${CLANGPP})
+endif(${CLANGPP} MATCHES "clang")
 
 ## Compile as C++14
 add_compile_options(-std=c++14 -Wno-narrowing -Ofast -march=native -fdelayed-template-parsing)

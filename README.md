@@ -14,10 +14,12 @@ git clone --recursive https://github.com/ut-ims-robotics/depth_cam_hand_tracker.
 
 3) **glfw3**
 ```
- sudo apt install libglfw3 
+ sudo apt install libglfw3-dev
 ```
-4) **human_msgs package** - Clone this repo: https://github.com/ut-ims-robotics/human_msgs
+4) **human_msgs package** - Clone this repo: https://github.com/ut-ims-robotics/human\_msgs
 
+## When building with catking build tools
+Switching to CLANG compiler might cause catkin build system to get stuck. Abort build with CRTL-C and retry or use `catkin_make` when experiencing complications. 
 
 ## Usage
 **Tracker node:**
