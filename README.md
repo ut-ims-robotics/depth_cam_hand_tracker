@@ -7,7 +7,7 @@ This is a ROS package that uses depth images to track hands. The code is based o
 ```
 git clone --recursive https://github.com/ut-ims-robotics/depth_cam_hand_tracker.git
 ```
-2) **clang compiler** - The headers which are included from *hand_tracking_samples* were developed via clang compiler (and in c++14 standard):
+2) **clang compiler** - The headers which are included from *hand_tracking_samples* were developed via clang compiler (and in c++14 standard, fyi):
 ```
  sudo apt install clang
 ```
@@ -16,6 +16,8 @@ git clone --recursive https://github.com/ut-ims-robotics/depth_cam_hand_tracker.
 ```
  sudo apt install libglfw3 
 ```
+4) **human_msgs package** - Clone this repo: https://github.com/ut-ims-robotics/human_msgs
+
 
 ## Usage
 **Tracker node:**
@@ -34,7 +36,7 @@ git clone --recursive https://github.com/ut-ims-robotics/depth_cam_hand_tracker.
 
 | Topic                   | Type
 | ------------------------|-------------
-| *"hand_tracker_output"* | human_msgs/Hands
+| *"hand_tracker_output"* | [human_msgs/Hands](https://github.com/ut-ims-robotics/human_msgs)
 
  * **Description**
 
