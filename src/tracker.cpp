@@ -27,6 +27,11 @@
 #include "sensor_msgs/Image.h"
 #include "sensor_msgs/CameraInfo.h"
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2/LinearMath/Transform.h>
+#include <tf2/LinearMath/Vector3.h>
+#include <tf2/LinearMath/Quaternion.h>
+
 /*
  * Some global variables. Probably should create a class
  */
@@ -166,17 +171,44 @@ void depthImageCallback(const sensor_msgs::Image& msg)
        * Create a handtracker message out of the position and orientation
        * data provided by the palm mesh (index = 1)
        */
+      tf2::Vector3 palm_pos;
+      palm_pos.setX(allmeshes[1]->pose.position[0]);
+      palm_pos.setY(allmeshes[1]->pose.position[1]);
+      palm_pos.setZ(allmeshes[1]->pose.position[2]);
+
+      tf2::Quaternion palm_ori;
+      palm_ori.setX(allmeshes[1]->pose.orientation[0]);
+      palm_ori.setY(allmeshes[1]->pose.orientation[1]);
+      palm_ori.setZ(allmeshes[1]->pose.orientation[2]);
+      palm_ori.setW(allmeshes[1]->pose.orientation[3]);
+
+
+      // Use tf2 to transform hand pose from its optical frame to the
+      // center of the handtracker workspace
+      tf2::Transform transform(palm_ori, palm_pos);
+
+      tf2::Quaternion q2;
+      q2.setRPY(3.14, 0, 1.57);
+      tf2::Quaternion q3;
+      q3.setRPY(-1.57, -1.57, 0);
+      tf2::Transform transform2(q2, tf2::Vector3(0, -0.05, 0.3));
+      
+      // do the transformation
+      tf2::Vector3 palm_pos_new = transform2 * palm_pos;
+      tf2::Quaternion palm_ori_new = q2 * palm_ori * q3;
+
+      // Convert to geometry_msgs types
       geometry_msgs::PoseStamped palm_pose;
-      palm_pose.pose.position.x = allmeshes[1]->pose.position[0];
-      palm_pose.pose.position.y = allmeshes[1]->pose.position[1];
-      palm_pose.pose.position.z = allmeshes[1]->pose.position[2];
+      palm_pose.pose.position.x = palm_pos_new.x();
+      palm_pose.pose.position.y = palm_pos_new.y();
+      palm_pose.pose.position.z = palm_pos_new.z();
 
-      palm_pose.pose.orientation.x = allmeshes[1]->pose.orientation[0];
-      palm_pose.pose.orientation.y = allmeshes[1]->pose.orientation[1];
-      palm_pose.pose.orientation.z = allmeshes[1]->pose.orientation[2];
-      palm_pose.pose.orientation.w = allmeshes[1]->pose.orientation[3];
+      palm_pose.pose.orientation.x = palm_ori_new.x();
+      palm_pose.pose.orientation.y = palm_ori_new.y();
+      palm_pose.pose.orientation.z = palm_ori_new.z();
+      palm_pose.pose.orientation.w = palm_ori_new.w();
 
-      palm_pose.header.frame_id = "camera_depth_optical_frame";
+      palm_pose.header.frame_id = "hand_tracker_frame";
       palm_pose.header.stamp = ros::Time::now();
 
       human_msgs::Hand hand_msg;
